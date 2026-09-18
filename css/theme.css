@@ -1,0 +1,50 @@
+/* Palette et réglages partagés. Couleurs vives et chaudes, pensées pour un enfant. */
+
+:root {
+  --bg: #eaf4ff;
+  --bg-deep: #d6e8ff;
+  --panel: #ffffff;
+  --ink: #1f2a44;
+  --ink-soft: #5b6b8c;
+
+  --primary: #118ab2;
+  --accent: #ffd166;
+  --ok: #06d6a0;
+  --ok-deep: #049f76;
+  --ko: #ef476f;
+
+  /* Un doigt = une couleur, identique sur le clavier et dans la légende. */
+  --f-lp: #ef476f;
+  --f-lr: #f78c6b;
+  --f-lm: #ffd166;
+  --f-li: #06d6a0;
+  --f-ri: #4cc9f0;
+  --f-rm: #4895ef;
+  --f-rr: #7b6cf6;
+  --f-rp: #b56cf6;
+  --f-th: #adb5bd;
+
+  --radius: 18px;
+  --radius-key: 12px;
+  --shadow: 0 10px 24px rgba(31, 42, 68, 0.12);
+  --font: 'Fredoka', 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
+  --mono: 'Fredoka', ui-monospace, 'Cascadia Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  color: var(--ink);
+  background: radial-gradient(circle at 20% 0%, var(--bg) 0%, var(--bg-deep) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
