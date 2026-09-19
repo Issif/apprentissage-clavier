@@ -1,4 +1,4 @@
-# Clavier Classroom
+# Apprendre le clavier
 
 Une application web pour apprendre à taper au clavier **AZERTY français**, pensée pour les enfants.
 Elle affiche une séquence de caractères à reproduire : chaque touche juste passe en vert, chaque
