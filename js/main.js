@@ -8,6 +8,20 @@ import { sounds } from './audio.js';
 
 const SEQUENCES_PER_LEVEL = 5;
 
+const FOCUSABLE_CONTROLS = ['SELECT', 'BUTTON', 'INPUT', 'TEXTAREA'];
+
+/**
+ * Niveaux d'aide. `threshold` est le nombre d'erreurs sur le caractère courant
+ * a partir duquel la touche (et son modificateur) est montrée sur le clavier.
+ * Le compteur repart a zéro des que l'enfant passe au caractère suivant.
+ */
+const HELP_LEVELS = [
+  { id: 'none', label: 'Aucune aide', threshold: Infinity },
+  { id: 'high', label: 'Élevée — après 1 erreur', threshold: 1 },
+  { id: 'medium', label: 'Moyenne — après 3 erreurs', threshold: 3 },
+  { id: 'low', label: 'Faible — après 5 erreurs', threshold: 5 },
+];
+
 const $ = (sel) => document.querySelector(sel);
 
 const el = {
@@ -26,6 +40,7 @@ const el = {
   bubble: $('#bubble'),
   confetti: $('#confetti'),
   levelSelect: $('#level-select'),
+  helpSelect: $('#help-select'),
   soundBtn: $('#sound-btn'),
   resetBtn: $('#reset-btn'),
   warning: $('#layout-warning'),
@@ -40,6 +55,14 @@ let level = LEVELS[Math.min(progress.state.levelIndex, LEVELS.length - 1)];
 let doneInLevel = progress.state.levelDone || 0;
 let consecutiveErrors = 0;
 let locked = false;
+
+const helpLevel = () => HELP_LEVELS.find((h) => h.id === progress.state.help) ?? HELP_LEVELS[1];
+
+/** Montre la touche attendue uniquement si le niveau d'aide le permet. */
+function refreshHighlight() {
+  const revealed = engine.wrongOnCurrent >= helpLevel().threshold;
+  keyboard.highlight(revealed ? engine.expected : null);
+}
 
 /* --------------------------------------------------------------- affichage */
 
@@ -99,7 +122,7 @@ function confetti() {
 function newSequence() {
   engine.load(nextSequence(level));
   renderSequence();
-  keyboard.highlight(engine.expected);
+  refreshHighlight();
   renderHud();
 }
 
@@ -152,6 +175,7 @@ function onChar(char) {
     keyboard.flash(char, false);
     renderSequence();
     el.sequence.children[index]?.classList.add('shake');
+    refreshHighlight();
     mascot('oops');
     if (consecutiveErrors >= 8) el.warning.hidden = false;
     renderHud();
@@ -163,7 +187,7 @@ function onChar(char) {
   if (progress.state.sound) sounds.ok();
   keyboard.flash(char, true);
   renderSequence();
-  keyboard.highlight(engine.expected);
+  refreshHighlight();
   renderHud();
 
   if (result === COMPLETE) onSequenceComplete();
@@ -177,7 +201,8 @@ window.addEventListener('keydown', (event) => {
   const altGraph = typeof event.getModifierState === 'function'
     && (event.getModifierState('AltGraph') || (event.ctrlKey && event.altKey));
   if (!altGraph && (event.ctrlKey || event.altKey || event.metaKey)) return;
-  if (event.target.tagName === 'SELECT') return;
+  // Un controle garde le focus : on le laisse recevoir la frappe.
+  if (FOCUSABLE_CONTROLS.includes(event.target.tagName)) return;
 
   if (event.key === 'Tab' || event.key === 'Backspace' || event.key === ' ') {
     event.preventDefault();
@@ -193,17 +218,38 @@ window.addEventListener('keydown', (event) => {
   onChar(event.key);
 });
 
-el.levelSelect.addEventListener('change', (e) => goToLevel(Number(e.target.value), { announce: false }));
+/**
+ * Un reglage garde le focus apres avoir ete actionne : les frappes suivantes
+ * iraient au <select> ou au bouton au lieu d'aller au jeu. On rend donc la main
+ * au document des que le reglage est pris en compte.
+ */
+function releaseFocus(element) {
+  element.blur();
+}
 
-el.soundBtn.addEventListener('click', () => {
+el.levelSelect.addEventListener('change', (e) => {
+  goToLevel(Number(e.target.value), { announce: false });
+  releaseFocus(e.target);
+});
+
+el.helpSelect.addEventListener('change', (e) => {
+  progress.setHelp(e.target.value);
+  refreshHighlight();
+  releaseFocus(e.target);
+});
+
+el.soundBtn.addEventListener('click', (e) => {
   const on = progress.toggleSound();
   el.soundBtn.textContent = on ? '🔊' : '🔇';
   el.soundBtn.setAttribute('aria-label', on ? 'Couper le son' : 'Activer le son');
+  releaseFocus(e.currentTarget);
 });
 
-el.resetBtn.addEventListener('click', () => {
+el.resetBtn.addEventListener('click', (e) => {
+  releaseFocus(e.currentTarget);
   if (!confirm('Effacer les étoiles et recommencer au niveau 1 ?')) return;
   progress.reset();
+  el.helpSelect.value = helpLevel().id;
   goToLevel(0, { announce: false });
 });
 
@@ -215,6 +261,14 @@ LEVELS.forEach((lv, i) => {
   option.textContent = `${lv.id}. ${lv.name}`;
   el.levelSelect.appendChild(option);
 });
+
+HELP_LEVELS.forEach((help) => {
+  const option = document.createElement('option');
+  option.value = help.id;
+  option.textContent = help.label;
+  el.helpSelect.appendChild(option);
+});
+el.helpSelect.value = helpLevel().id;
 
 renderLegend(el.legend);
 el.soundBtn.textContent = progress.state.sound ? '🔊' : '🔇';

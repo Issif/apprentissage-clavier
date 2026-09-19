@@ -15,6 +15,7 @@ export class Engine {
     this.index = 0;
     this.statuses = [];
     this.errorsAt = new Set();
+    this.wrongOnCurrent = 0;
     this.startedAt = null;
     this.stats = { typed: 0, errors: 0 };
   }
@@ -24,6 +25,7 @@ export class Engine {
     this.index = 0;
     this.statuses = new Array(sequence.length).fill(null);
     this.errorsAt = new Set();
+    this.wrongOnCurrent = 0;
     this.startedAt = null;
   }
 
@@ -58,12 +60,14 @@ export class Engine {
     if (char !== this.expected) {
       this.stats.errors += 1;
       this.errorsAt.add(at);
+      this.wrongOnCurrent += 1;
       this.statuses[at] = WRONG;
       return { result: WRONG, index: at };
     }
 
     // Une case corrigée reste marquee comme rattrapée, pas comme parfaite.
     this.statuses[at] = CORRECT;
+    this.wrongOnCurrent = 0;
     this.index += 1;
     return { result: this.done ? COMPLETE : CORRECT, index: at };
   }

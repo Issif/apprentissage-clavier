@@ -14,6 +14,7 @@ const DEFAULTS = {
   sequencesDone: 0,
   bestWpm: 0,
   sound: true,
+  help: 'high',
 };
 
 function read() {
@@ -51,6 +52,11 @@ export class Progress {
     return s;
   }
 
+  setHelp(id) {
+    this.state.help = id;
+    this.save();
+  }
+
   setLevel(index) {
     this.state.levelIndex = index;
     this.save();
@@ -63,7 +69,7 @@ export class Progress {
   }
 
   reset() {
-    this.state = { ...DEFAULTS, sound: this.state.sound };
+    this.state = { ...DEFAULTS, sound: this.state.sound, help: this.state.help };
     this.save();
   }
 }

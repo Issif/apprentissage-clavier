@@ -6,7 +6,7 @@ erreur en rouge. Séquence terminée, une nouvelle apparaît.
 
 100 % côté navigateur : HTML5, CSS et JavaScript, **sans aucune dépendance ni étape de build**.
 
-![Clavier Classroom en cours de partie](screenshots/screenshot_1.png)
+![Apprendre le clavier en cours de partie](screenshots/screenshot_1.png)
 
 ## Démarrer
 
@@ -39,11 +39,26 @@ caractère demande `Maj` ou `AltGr`, le modificateur s'allume lui aussi — la t
 est toujours celle de la main opposée. Un libellé annonce le doigt en toutes lettres
 (« Auriculaire droit », « Index gauche + AltGr (pouce droit) »).
 
+**L'aide est réglable.** Par défaut, rien n'est montré tant que la frappe est juste : c'est à
+l'enfant de chercher la touche. Le sélecteur **Aide**, en haut à droite, décide à partir de combien
+d'erreurs sur le caractère en cours la touche se dévoile sur le clavier.
+
+| Réglage | La touche apparaît |
+|---|---|
+| Aucune aide | jamais |
+| Élevée | après 1 erreur |
+| Moyenne | après 3 erreurs |
+| Faible | après 5 erreurs |
+
+Le compteur repart à zéro dès qu'on passe au caractère suivant : l'indice ne reste pas affiché pour
+le reste de la séquence. Le clavier dessiné reste visible en permanence et sert de plan de repère,
+même en « aucune aide ».
+
 **Les étoiles récompensent la propreté.** Une séquence sans la moindre faute vaut 3 étoiles, une
 séquence rattrapée en vaut 1. La série compte les séquences parfaites d'affilée. Cinq séquences
 réussies font passer au niveau suivant.
 
-La progression (niveau, étoiles, record de vitesse, son) est enregistrée dans le `localStorage` du
+La progression (niveau, étoiles, record de vitesse, son, niveau d'aide) est enregistrée dans le `localStorage` du
 navigateur. Le bouton ↺ remet tout à zéro. Si le stockage est indisponible — navigation privée,
 site data bloqué — la partie reste jouable, seule la mémoire d'une session à l'autre est perdue.
 
@@ -97,6 +112,8 @@ Tout se passe dans [`js/sequences.js`](js/sequences.js).
   les modes `letters`/`words` le jeu de caractères autorisé dans `chars`.
 - **Changer le rythme** : la constante `SEQUENCES_PER_LEVEL` dans
   [`js/main.js`](js/main.js) fixe le nombre de séquences avant le niveau suivant.
+- **Régler les seuils d'aide** : le tableau `HELP_LEVELS` dans [`js/main.js`](js/main.js) associe
+  chaque réglage à son nombre d'erreurs déclencheur.
 
 Les couleurs, y compris celle de chaque doigt, sont des variables CSS regroupées en haut de
 [`css/theme.css`](css/theme.css).
@@ -112,3 +129,7 @@ Les couleurs, y compris celle de chaque doigt, sont des variables CSS regroupée
   cas sont gérés.
 - Le son est généré à la volée en WebAudio et ne démarre qu'après la première frappe, les
   navigateurs bloquant l'audio avant toute interaction.
+
+## Licence
+
+[MIT](LICENSE) — © 2026 Thomas Labarussias.

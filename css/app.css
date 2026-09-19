@@ -15,7 +15,7 @@
   box-shadow: 0 3px 0 rgba(31, 42, 68, 0.2);
 }
 
-.controls { display: flex; align-items: center; gap: 10px; }
+.controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
 .select {
   display: flex; align-items: center; gap: 8px;
