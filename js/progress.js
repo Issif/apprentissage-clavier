@@ -12,9 +12,9 @@ const DEFAULTS = {
   streak: 0,
   bestStreak: 0,
   sequencesDone: 0,
-  bestWpm: 0,
   sound: true,
   help: 'high',
+  theme: 'auto',
 };
 
 function read() {
@@ -41,15 +41,19 @@ export class Progress {
   }
 
   /** Une séquence terminée : étoiles gagnées selon la propreté de la frappe. */
-  completeSequence({ perfect, wpm }) {
+  completeSequence({ perfect }) {
     const s = this.state;
     s.sequencesDone += 1;
     s.stars += perfect ? 3 : 1;
     s.streak = perfect ? s.streak + 1 : 0;
     s.bestStreak = Math.max(s.bestStreak, s.streak);
-    s.bestWpm = Math.max(s.bestWpm, wpm);
     this.save();
     return s;
+  }
+
+  setTheme(id) {
+    this.state.theme = id;
+    this.save();
   }
 
   setHelp(id) {
@@ -69,7 +73,7 @@ export class Progress {
   }
 
   reset() {
-    this.state = { ...DEFAULTS, sound: this.state.sound, help: this.state.help };
+    this.state = { ...DEFAULTS, sound: this.state.sound, help: this.state.help, theme: this.state.theme };
     this.save();
   }
 }

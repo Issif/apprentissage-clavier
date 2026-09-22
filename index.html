@@ -7,6 +7,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>
+    // Applique le theme choisi avant le premier rendu : main.js est un module,
+    // donc differe, et un theme force contraire au systeme provoquerait sinon
+    // un bref flash. Le cas « auto » est gere par le CSS seul.
+    try {
+      const saved = JSON.parse(localStorage.getItem('clavier-classroom:progress') || '{}');
+      if (saved.theme === 'light' || saved.theme === 'dark') {
+        document.documentElement.dataset.theme = saved.theme;
+      }
+    } catch { /* stockage indisponible : on garde le theme systeme. */ }
+  </script>
   <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="css/app.css">
 </head>
@@ -24,10 +35,32 @@
         Aide
         <select id="help-select" aria-label="Choisir le niveau d’aide"></select>
       </label>
+      <label class="select theme-switch">
+        Thème
+        <input type="checkbox" id="theme-toggle" aria-label="Thème sombre">
+        <span class="switch" aria-hidden="true">
+          <span class="switch-thumb">
+            <svg class="switch-icon switch-icon--sun" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="5"></circle>
+              <path d="M12 1v3M12 20v3M1 12h3M20 12h3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M19.8 4.2l-2.1 2.1M6.3 17.7l-2.1 2.1"></path>
+            </svg>
+            <svg class="switch-icon switch-icon--moon" viewBox="0 0 24 24">
+              <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"></path>
+            </svg>
+          </span>
+        </span>
+      </label>
       <button id="sound-btn" class="icon-btn" type="button" aria-label="Couper le son">🔊</button>
       <button id="reset-btn" class="icon-btn" type="button" aria-label="Tout recommencer">↺</button>
     </div>
   </header>
+
+  <p class="no-keyboard">
+    <span class="no-keyboard-icon" aria-hidden="true">⌨</span>
+    <strong>Il faut un vrai clavier</strong>
+    Cet exercice s’apprend avec les dix doigts posés sur un clavier physique.
+    Ouvre cette page sur un ordinateur !
+  </p>
 
   <main class="stage">
     <section class="panel">
@@ -71,11 +104,17 @@
       <dl class="scores">
         <div><dt>Étoiles</dt><dd id="stars">0</dd></div>
         <div><dt>Série</dt><dd id="streak">0</dd></div>
-        <div><dt>Mots/min</dt><dd id="wpm">0</dd></div>
         <div><dt>Précision</dt><dd id="accuracy">100%</dd></div>
       </dl>
     </aside>
   </main>
+
+  <footer class="footer">
+    © 2026 —
+    <a href="https://thomas.labarussias.fr" target="_blank" rel="noopener">Thomas Labarussias</a>
+    ·
+    <a href="https://github.com/Issif/apprentissage-clavier" target="_blank" rel="noopener">Code source</a>
+  </footer>
 
   <script type="module" src="js/main.js"></script>
   <script data-goatcounter="https://clavier.goatcounter.com/count"

@@ -16,7 +16,6 @@ export class Engine {
     this.statuses = [];
     this.errorsAt = new Set();
     this.wrongOnCurrent = 0;
-    this.startedAt = null;
     this.stats = { typed: 0, errors: 0 };
   }
 
@@ -26,7 +25,6 @@ export class Engine {
     this.statuses = new Array(sequence.length).fill(null);
     this.errorsAt = new Set();
     this.wrongOnCurrent = 0;
-    this.startedAt = null;
   }
 
   get expected() {
@@ -52,7 +50,6 @@ export class Engine {
    */
   press(char) {
     if (this.done) return { result: COMPLETE, index: this.index };
-    if (this.startedAt === null) this.startedAt = performance.now();
 
     const at = this.index;
     this.stats.typed += 1;
@@ -70,14 +67,6 @@ export class Engine {
     this.wrongOnCurrent = 0;
     this.index += 1;
     return { result: this.done ? COMPLETE : CORRECT, index: at };
-  }
-
-  /** Mots par minute, sur la base conventionnelle de 5 frappes par mot. */
-  wpm() {
-    if (this.startedAt === null) return 0;
-    const minutes = (performance.now() - this.startedAt) / 60000;
-    if (minutes <= 0) return 0;
-    return Math.round((this.target.length / 5) / minutes);
   }
 
   accuracy() {

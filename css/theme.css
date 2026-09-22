@@ -24,18 +24,77 @@
   --f-rp: #b56cf6;
   --f-th: #adb5bd;
 
+  /* Texte pose sur un aplat --primary (bulle de la mascotte). */
+  --on-primary: #ffffff;
+  /* Texte et traits poses sur un aplat --accent. Le jaune est identique dans
+     les deux themes : cette encre sombre reste donc valable partout, et n'est
+     volontairement pas redefinie plus bas. */
+  --on-accent: #1f2a44;
+  /* Arete basse des touches, qui leur donne du relief. */
+  --key-edge: rgba(31, 42, 68, 0.14);
+
   --radius: 18px;
   --radius-key: 12px;
   --shadow: 0 10px 24px rgba(31, 42, 68, 0.12);
   --font: 'Fredoka', 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
   --mono: 'Fredoka', ui-monospace, 'Cascadia Mono', monospace;
+
+  /* Laisse le navigateur accorder ses propres widgets (menus, ascenseurs). */
+  color-scheme: light dark;
 }
+
+/*
+ * Theme sombre. Seuls les tokens changent : aucune regle de mise en page n'est
+ * dupliquee. Il s'applique dans deux cas, d'ou les deux selecteurs :
+ *   - choix explicite      -> [data-theme="dark"]
+ *   - choix « auto »       -> preference systeme, sauf si le clair est force
+ * « auto » ne pose pas d'attribut utile : le media query suffit, donc le theme
+ * systeme est respecte meme si le JavaScript ne s'execute pas.
+ */
+:root[data-theme='dark'] {
+  --bg: #1b2333;
+  --bg-deep: #131a26;
+  --panel: #273249;
+  --ink: #e9eefb;
+  --ink-soft: #a3b3d0;
+
+  --primary: #5ec8e8;
+  --ok-deep: #3ae0b5;
+  --ko: #ff6b8f;
+
+  --on-primary: #10192a;
+  --key-edge: rgba(0, 0, 0, 0.45);
+  --shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #1b2333;
+    --bg-deep: #131a26;
+    --panel: #273249;
+    --ink: #e9eefb;
+    --ink-soft: #a3b3d0;
+
+    --primary: #5ec8e8;
+    --ok-deep: #3ae0b5;
+    --ko: #ff6b8f;
+
+    --on-primary: #10192a;
+    --key-edge: rgba(0, 0, 0, 0.45);
+    --shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='light'] { color-scheme: light; }
 
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
   margin: 0;
   min-height: 100vh;
+  display: flex; flex-direction: column;
   font-family: var(--font);
   color: var(--ink);
   background: radial-gradient(circle at 20% 0%, var(--bg) 0%, var(--bg-deep) 100%);

@@ -12,34 +12,99 @@
  */
 
 const WORDS = [
-  'ami', 'ane', 'arbre', 'balle', 'banc', 'bateau', 'bille', 'blanc', 'bleu', 'boite',
-  'bonbon', 'bouche', 'branche', 'bras', 'bruit', 'cadeau', 'canard', 'carte', 'chat',
-  'chaud', 'chien', 'ciel', 'classe', 'clou', 'coeur', 'copain', 'corde', 'cour', 'craie',
-  'cube', 'dent', 'dessin', 'doigt', 'dos', 'eau', 'ecole', 'encre', 'enfant', 'ferme',
-  'feu', 'feuille', 'fleur', 'foret', 'fraise', 'frere', 'fruit', 'gant', 'gateau', 'glace',
-  'gomme', 'grand', 'herbe', 'hibou', 'histoire', 'hiver', 'image', 'jardin', 'jaune',
-  'jeu', 'joue', 'jour', 'jupe', 'lac', 'lait', 'lampe', 'lapin', 'lettre', 'lion', 'livre',
-  'loup', 'lune', 'main', 'maison', 'manteau', 'mer', 'midi', 'miel', 'mot', 'mouton',
-  'mur', 'neige', 'nid', 'nuage', 'nuit', 'oeuf', 'oiseau', 'ombre', 'orange', 'ours',
-  'page', 'pain', 'panier', 'papier', 'parc', 'patte', 'peau', 'phrase', 'piano', 'pied',
-  'pierre', 'pluie', 'poisson', 'pomme', 'pont', 'porte', 'poule', 'prince', 'quatre',
-  'radio', 'raisin', 'renard', 'rire', 'robe', 'roi', 'rouge', 'route', 'ruban', 'sable',
-  'salade', 'sapin', 'saut', 'savon', 'seau', 'soleil', 'soir', 'souris', 'sucre', 'table',
-  'tapis', 'tasse', 'temps', 'terre', 'tete', 'tigre', 'toit', 'train', 'trois', 'tulipe',
-  'vache', 'vent', 'verre', 'vert', 'ville', 'voiture', 'vue', 'wagon', 'zebre',
+  'abri', 'acteur', 'addition', 'affiche', 'aigle', 'aile', 'album', 'allumette', 'alphabet',
+  'ambulance', 'ami', 'ampoule', 'ananas', 'ane', 'animal', 'anniversaire', 'antilope',
+  'appareil', 'arbre', 'arbuste', 'armoire', 'arrosoir', 'ascenseur', 'assiette', 'atelier',
+  'auto', 'autobus', 'automne', 'aventure', 'avion', 'bagage', 'baguette', 'baignoire',
+  'balai', 'balcon', 'balle', 'ballon', 'bambou', 'banane', 'banc', 'bandeau', 'barbe',
+  'barque', 'bassin', 'bateau', 'bavoir', 'beurre', 'biberon', 'bicyclette', 'bijou', 'bille',
+  'biscuit', 'blanc', 'bleu', 'blouse', 'bocal', 'bois', 'boisson', 'boite', 'bol', 'bonbon',
+  'bonhomme', 'bonnet', 'botte', 'bouche', 'bouchon', 'boucle', 'bougie', 'boule', 'boulon',
+  'bouquet', 'bourgeon', 'boussole', 'bouton', 'branche', 'bras', 'brique', 'brosse',
+  'brouette', 'brouillard', 'bruit', 'buisson', 'bureau', 'bus', 'cabane', 'cactus', 'cadeau',
+  'cahier', 'caillou', 'caisse', 'calcul', 'calendrier', 'camion', 'campagne', 'canal',
+  'canard', 'canari', 'canne', 'capitaine', 'capuche', 'caramel', 'caravane', 'carnaval',
+  'carotte', 'carreau', 'cartable', 'carte', 'carton', 'casque', 'casquette', 'castor',
+  'ceinture', 'cerceau', 'cerise', 'chaise', 'chambre', 'champ', 'champignon', 'chandelle',
+  'chanson', 'chapeau', 'chariot', 'charrette', 'chat', 'chaton', 'chaud', 'chaussette',
+  'chaussure', 'chemin', 'chemise', 'cheval', 'cheveu', 'chien', 'chiffre', 'chocolat', 'chou',
+  'ciel', 'cigogne', 'ciseaux', 'citron', 'citrouille', 'clairon', 'classe', 'clavier',
+  'cloche', 'clou', 'clown', 'cochon', 'coeur', 'coffre', 'colle', 'collier', 'colline',
+  'colombe', 'commode', 'concert', 'confiture', 'copain', 'coquelicot', 'coquillage',
+  'corbeau', 'corbeille', 'corde', 'corne', 'costume', 'coton', 'couleur', 'couloir', 'coupe',
+  'cour', 'courage', 'couronne', 'cousin', 'coussin', 'couteau', 'couverture', 'crabe',
+  'craie', 'crapaud', 'crayon', 'crevette', 'crocodile', 'cube', 'cuisine', 'cygne', 'dauphin',
+  'dent', 'dessert', 'dessin', 'diamant', 'dinosaure', 'doigt', 'dos', 'dragon', 'drapeau',
+  'eau', 'ecole', 'encre', 'enfant', 'escalier', 'escargot', 'espace', 'famille', 'farine',
+  'fauteuil', 'ferme', 'feu', 'feuille', 'ficelle', 'figure', 'filet', 'fille', 'film',
+  'flamme', 'fleur', 'flocon', 'fontaine', 'football', 'foret', 'fourchette', 'fourmi',
+  'fourrure', 'fraise', 'framboise', 'frere', 'fromage', 'fruit', 'galet', 'gant', 'garage',
+  'gateau', 'gazon', 'genou', 'girafe', 'glace', 'globe', 'gomme', 'grand', 'grenier',
+  'grenouille', 'griffe', 'grillon', 'groseille', 'grotte', 'guitare', 'hamac', 'hameau',
+  'haricot', 'harpe', 'hasard', 'hauteur', 'herbe', 'hibou', 'hippopotame', 'histoire',
+  'hiver', 'horloge', 'hublot', 'huile', 'igloo', 'image', 'insecte', 'instrument', 'jambe',
+  'jambon', 'jardin', 'jardinier', 'jaune', 'jeu', 'jongleur', 'joue', 'jouet', 'jour',
+  'journal', 'judo', 'jumeau', 'jungle', 'jupe', 'kangourou', 'koala', 'lac', 'laine', 'lait',
+  'laitue', 'lampe', 'lanterne', 'lapin', 'larme', 'lavabo', 'lettre', 'libellule', 'licorne',
+  'limace', 'linge', 'lion', 'liste', 'livre', 'loup', 'loutre', 'lune', 'lutin', 'machine',
+  'magasin', 'magie', 'maillot', 'main', 'maison', 'malle', 'manche', 'mandarine', 'manteau',
+  'marche', 'marin', 'marmite', 'marteau', 'masque', 'matin', 'melon', 'menton', 'mer',
+  'mesure', 'meuble', 'micro', 'midi', 'miel', 'miette', 'mimosa', 'minute', 'miroir', 'monde',
+  'monstre', 'montagne', 'mot', 'moto', 'mouche', 'mouchoir', 'moufle', 'moulin', 'moustache',
+  'mouton', 'mur', 'musique', 'nappe', 'narine', 'navire', 'neige', 'nez', 'nid', 'niveau',
+  'noisette', 'noix', 'nombre', 'nounours', 'nuage', 'nuit', 'oeuf', 'oignon', 'oiseau',
+  'olive', 'ombre', 'ombrelle', 'oncle', 'ongle', 'orage', 'orange', 'ordinateur', 'oreille',
+  'oreiller', 'orteil', 'ortie', 'otarie', 'ouragan', 'ours', 'outil', 'ouvrier', 'page',
+  'paille', 'pain', 'palais', 'panda', 'panier', 'pantalon', 'pantoufle', 'papier', 'papillon',
+  'paquet', 'parachute', 'parapluie', 'parc', 'parfum', 'patin', 'patte', 'peau', 'pelle',
+  'pelouse', 'peluche', 'pendule', 'perle', 'perroquet', 'phare', 'pharmacie', 'photo',
+  'phrase', 'piano', 'pied', 'pierre', 'pigeon', 'pilote', 'pinceau', 'pingouin', 'pirate',
+  'piscine', 'pizza', 'planche', 'plante', 'plateau', 'pluie', 'plume', 'poche', 'poire',
+  'poireau', 'poisson', 'poivre', 'pomme', 'pompier', 'poney', 'pont', 'porte', 'poste',
+  'potage', 'poubelle', 'pouce', 'poudre', 'poule', 'poulet', 'poussin', 'prairie', 'prince',
+  'princesse', 'prune', 'puzzle', 'pyjama', 'quatre', 'quille', 'racine', 'radio', 'radis',
+  'rail', 'raisin', 'rame', 'rampe', 'raquette', 'rayon', 'recette', 'reine', 'remorque',
+  'renard', 'renne', 'requin', 'rideau', 'rire', 'robe', 'rocher', 'roi', 'rose', 'roue',
+  'rouge', 'route', 'ruban', 'ruche', 'ruisseau', 'sable', 'sac', 'saison', 'salade', 'salle',
+  'salon', 'sandale', 'sandwich', 'sanglier', 'sapin', 'sardine', 'sauce', 'saucisse', 'saut',
+  'sauterelle', 'savane', 'savon', 'scie', 'seau', 'semaine', 'sentier', 'serpent',
+  'serviette', 'sifflet', 'singe', 'sirop', 'ski', 'soeur', 'soir', 'soleil', 'souffle',
+  'soupe', 'sourire', 'souris', 'spectacle', 'sport', 'statue', 'stylo', 'sucre', 'table',
+  'tabouret', 'taille', 'tambour', 'tante', 'tapis', 'tarte', 'tasse', 'taupe', 'taxi',
+  'temps', 'tente', 'terre', 'tete', 'tigre', 'timbre', 'tiroir', 'toit', 'tomate', 'tonneau',
+  'tortue', 'tournesol', 'tracteur', 'train', 'tricot', 'trois', 'trompette', 'tronc',
+  'trottoir', 'trousse', 'truite', 'tulipe', 'tunnel', 'usine', 'vacances', 'vache', 'vague',
+  'valise', 'vanille', 'vase', 'veau', 'vendredi', 'vent', 'ventre', 'verger', 'verre', 'vert',
+  'viande', 'village', 'ville', 'vitre', 'voile', 'voisin', 'voiture', 'volant', 'volcan',
+  'voyage', 'vue', 'wagon', 'yaourt', 'zebre', 'zoo',
 ];
 
 const WORDS_ACCENTS = [
-  'école', 'éléphant', 'étoile', 'écran', 'échelle', 'éponge', 'épée', 'étage',
-  'fée', 'clé', 'café', 'bébé', 'thé', 'été', 'idée', 'blé', 'pré', 'télé',
-  'père', 'mère', 'frère', 'règle', 'zèbre', 'flèche', 'chèvre', 'lumière',
-  'là', 'déjà', 'garçon', 'leçon', 'français', 'glaçon', 'balançoire',
+  'balançoire', 'bébé', 'blé', 'ça', 'café', 'caleçon', 'canapé', 'carré', 'céréale', 'chéri',
+  'chèvre', 'cinéma', 'clé', 'comédie', 'début', 'décor', 'défilé', 'déjà', 'déjeuner',
+  'délice', 'détail', 'échelle', 'éclair', 'école', 'écolier', 'écolière', 'écran', 'écureuil',
+  'église', 'élastique', 'éléphant', 'élève', 'énergie', 'épaule', 'épée', 'épi', 'épicerie',
+  'épine', 'éponge', 'équipe', 'érable', 'étable', 'étage', 'étagère', 'étang', 'été',
+  'étoile', 'étude', 'éventail', 'façade', 'fée', 'flèche', 'français', 'française', 'frère',
+  'fusée', 'garçon', 'géant', 'général', 'glaçon', 'hameçon', 'hélicoptère', 'hérisson',
+  'héros', 'idée', 'infirmière', 'jardinière', 'journée', 'là', 'leçon', 'légume', 'lézard',
+  'limaçon', 'lumière', 'maçon', 'matinée', 'mélodie', 'ménage', 'mère', 'météo', 'mètre',
+  'métro', 'misère', 'moitié', 'numéro', 'océan', 'opéra', 'pédale', 'père', 'période',
+  'pièce', 'piège', 'poésie', 'poupée', 'pré', 'préau', 'première', 'prénom', 'problème',
+  'purée', 'récré', 'récréation', 'reçu', 'règle', 'réveil', 'rivière', 'rosée', 'salé',
+  'sécurité', 'séjour', 'sévère', 'siège', 'sirène', 'soirée', 'sorcière', 'sucré', 'télé',
+  'téléphone', 'télévision', 'thé', 'trésor', 'véhicule', 'vélo', 'vérité', 'verrière',
+  'voilà', 'zèbre',
 ];
 
 /* Mots composes : les seuls ou l'apostrophe et le trait d'union sont naturels. */
 const COMPOSED = [
-  "l'ami", "l'oiseau", "l'école", "c'est", "d'accord", "aujourd'hui",
-  'sous-bois', 'arc-en-ciel', 'grand-père', 'après-midi', 'porte-clé', 'chauve-souris',
+  'abat-jour', 'après-midi', 'arc-en-ciel', "aujourd'hui", 'basse-cour', "c'est",
+  'cerf-volant', 'chauve-souris', 'coffre-fort', "d'abord", "d'accord", 'demi-heure',
+  'grand-mère', 'grand-père', "j'aime", "l'ami", "l'année", "l'arbre", "l'école", "l'enfant",
+  "l'étoile", "l'histoire", "l'hiver", "l'image", "l'oiseau", "l'orange", "l'ours",
+  'petit-fils', 'pique-nique', 'porte-clé', 'porte-monnaie', "qu'il", 'rez-de-chaussée',
+  "s'il", 'sous-bois', 'timbre-poste', 'tire-bouchon', 'va-et-vient', 'wagon-lit', 'week-end',
 ];
 
 /* Signes simples (colles au mot) et signes doubles (precedes d'une espace,
@@ -60,6 +125,46 @@ const PHRASES = [
   'Les enfants jouent à la balle.',
   'Le soleil se lève sur la mer.',
   "Ma cousine lit un livre d'images.",
+  'Le chien aboie derrière la porte.',
+  'Une souris grise court sous la table.',
+  'Les poissons nagent dans le grand bassin.',
+  'Mon cartable est lourd ce matin.',
+  'Le professeur écrit au tableau.',
+  'Nous plantons des fleurs dans le jardin.',
+  "Le vent souffle très fort aujourd'hui.",
+  'Ma grand-mère prépare une bonne soupe.',
+  'Les oiseaux partent vers le sud.',
+  'Je range mes jouets dans la caisse.',
+  'Le facteur apporte une lettre.',
+  'Un papillon se pose sur la fleur.',
+  'Les vaches broutent dans le pré.',
+  'Mon vélo a une roue crevée.',
+  'La neige recouvre tout le village.',
+  'Nous allons à la piscine le mercredi.',
+  'Le boulanger sort le pain du four.',
+  'Une araignée tisse sa toile.',
+  'Les étoiles brillent au-dessus de la maison.',
+  'Mon chat dort près du radiateur.',
+  'Papa répare la porte du garage.',
+  'La tortue avance très lentement.',
+  'Les élèves lèvent la main.',
+  "Je bois un grand verre d'eau.",
+  'Le clown fait rire tous les enfants.',
+  'Une abeille butine dans le jardin.',
+  'Nous ramassons des feuilles mortes.',
+  'Le train entre dans la gare.',
+  'Ma cousine joue de la guitare.',
+  'Les pompiers arrivent très vite.',
+  'Le poussin sort de sa coquille.',
+  'Je colorie un dessin de dinosaure.',
+  'La lune éclaire le sentier.',
+  "Un écureuil grimpe dans l'arbre.",
+  'Nous chantons une chanson ensemble.',
+  'La tarte sent très bon.',
+  'Les enfants courent dans la cour.',
+  'Mon frère apprend à nager.',
+  'La pluie a mouillé mes chaussures.',
+  'Le renard se cache derrière un buisson.',
 ];
 
 const NUMBER_PHRASES = [
@@ -73,6 +178,26 @@ const NUMBER_PHRASES = [
   'Rendez-vous le 14 juillet à 20 h.',
   "Le code est 4-7-2-9, ne l'oublie pas !",
   'La récré dure 15 minutes, pas 30 !',
+  'Il est 9 h 30, on part !',
+  "Je compte jusqu'à 100 sans erreur.",
+  'La course dure 45 minutes.',
+  'Il reste 12 places dans le bus.',
+  '10 - 4 = 6, bravo !',
+  'La piscine ouvre à 14 h.',
+  'Nous sommes 27 dans la classe.',
+  'Le livre a 250 pages.',
+  'Maman achète 6 pommes et 2 poires.',
+  'Le film commence à 20 h 45.',
+  "J'ai gagné 3 parties sur 5.",
+  'La tour mesure 300 mètres.',
+  'Il y a 7 jours dans une semaine.',
+  'Mon anniversaire est le 23 mars.',
+  '5 x 5 = 25, facile !',
+  'Le train de 8 h 12 est en retard.',
+  'Nous avons marché 11 kilomètres.',
+  'La recette demande 250 g de farine.',
+  'Il fait 18 degrés ce matin.',
+  'Range les 4 cahiers et les 2 stylos.',
 ];
 
 /* Symboles AltGr retenus. Les touches mortes du troisieme niveau (~ ` ^) sont
@@ -90,6 +215,26 @@ const SYMBOL_PHRASES = [
   '|--- le mur ---|',
   '# canal : bricolage',
   'Le prix est de 100 € [promo].',
+  'marie.dupont@ecole.fr',
+  'Le total fait 25 €.',
+  '[a] [b] [c] et voilà !',
+  '{ ouvre } { ferme }',
+  'C:\\photos\\vacances',
+  '20 € - 5 € = 15 €',
+  '# jeux # musique # sport',
+  'contact@mairie.fr',
+  '| gauche | droite |',
+  'D:\\ecole\\devoirs',
+  'Prix : 9 € [soldes]',
+  '{ début } { milieu } { fin }',
+  'Mon adresse : lea@exemple.fr',
+  '1 € + 2 € + 3 € = 6 €',
+  '# canal : dessin # canal : lecture',
+  'Les clés sont [ici] et [là].',
+  'papa@travail.fr | maman@travail.fr',
+  '[oui] [non] [zut]',
+  'Le chemin est E:\\jeux\\course',
+  'Total : 75 € { paye }',
 ];
 
 export const LEVELS = [
@@ -144,6 +289,23 @@ export const LEVELS = [
 ];
 
 const pick = (list) => list[Math.floor(Math.random() * list.length)];
+
+/**
+ * Tirage qui ne ressert jamais la proposition precedente. Un tirage purement
+ * aleatoire redonne la meme phrase deux fois de suite une fois sur N, et c'est
+ * ce qui donne l'impression de tourner en rond, bien avant d'avoir fait le tour
+ * de la liste. La memoire est gardee par niveau, car `level.source` est refiltre
+ * a chaque appel et ne peut donc pas servir de cle.
+ */
+const lastPicked = new Map();
+
+function pickFresh(list, key) {
+  if (list.length < 2) return list[0];
+  let value;
+  do { value = pick(list); } while (value === lastPicked.get(key));
+  lastPicked.set(key, value);
+  return value;
+}
 
 /** Suites de lettres groupées, faciles à lire pour un enfant : "fjfj djdj kfkd". */
 function letterSequence(chars, groups = 3, size = 4) {
@@ -215,5 +377,5 @@ export function nextSequence(level) {
     return words.join(' ');
   }
 
-  return pick(level.source.filter((p) => fits(p, level.chars)));
+  return pickFresh(level.source.filter((p) => fits(p, level.chars)), level.id);
 }

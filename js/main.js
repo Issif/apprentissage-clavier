@@ -22,6 +22,11 @@ const HELP_LEVELS = [
   { id: 'low', label: 'Faible — après 5 erreurs', threshold: 5 },
 ];
 
+const THEME_IDS = ['auto', 'light', 'dark'];
+
+/** Preference systeme, qui sert de position de depart a l'interrupteur. */
+const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+
 const $ = (sel) => document.querySelector(sel);
 
 const el = {
@@ -34,13 +39,13 @@ const el = {
   seqBar: $('#seq-bar'),
   stars: $('#stars'),
   streak: $('#streak'),
-  wpm: $('#wpm'),
   accuracy: $('#accuracy'),
   mascot: $('#mascot'),
   bubble: $('#bubble'),
   confetti: $('#confetti'),
   levelSelect: $('#level-select'),
   helpSelect: $('#help-select'),
+  themeToggle: $('#theme-toggle'),
   soundBtn: $('#sound-btn'),
   resetBtn: $('#reset-btn'),
   warning: $('#layout-warning'),
@@ -57,6 +62,16 @@ let consecutiveErrors = 0;
 let locked = false;
 
 const helpLevel = () => HELP_LEVELS.find((h) => h.id === progress.state.help) ?? HELP_LEVELS[1];
+
+const themeId = () => (THEME_IDS.includes(progress.state.theme) ? progress.state.theme : 'auto');
+
+function applyTheme(id) {
+  if (id === 'auto') delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = id;
+}
+
+/** Position de l'interrupteur : le theme reellement affiche, systeme compris. */
+const isDark = () => (themeId() === 'auto' ? systemDark.matches : themeId() === 'dark');
 
 /** Montre la touche attendue uniquement si le niveau d'aide le permet. */
 function refreshHighlight() {
@@ -85,7 +100,6 @@ function renderHud() {
   const s = progress.state;
   el.stars.textContent = s.stars;
   el.streak.textContent = s.streak;
-  el.wpm.textContent = engine.wpm() || s.bestWpm;
   el.accuracy.textContent = `${engine.accuracy()}%`;
   el.levelName.textContent = `Niveau ${level.id} — ${level.name}`;
   el.hint.textContent = level.hint;
@@ -141,8 +155,7 @@ function goToLevel(index, { announce = true } = {}) {
 
 function onSequenceComplete() {
   const perfect = engine.errorsAt.size === 0;
-  const wpm = engine.wpm();
-  progress.completeSequence({ perfect, wpm });
+  progress.completeSequence({ perfect });
   doneInLevel += 1;
   progress.state.levelDone = doneInLevel;
   progress.save();
@@ -232,6 +245,20 @@ el.levelSelect.addEventListener('change', (e) => {
   releaseFocus(e.target);
 });
 
+el.themeToggle.addEventListener('change', (e) => {
+  // Le premier basculement quitte « auto » pour un choix explicite, qui tiendra
+  // meme si le systeme change d'avis ensuite.
+  const id = e.target.checked ? 'dark' : 'light';
+  progress.setTheme(id);
+  applyTheme(id);
+  releaseFocus(e.target);
+});
+
+// Tant qu'aucun choix explicite n'a ete fait, on suit le systeme en direct.
+systemDark.addEventListener('change', () => {
+  if (themeId() === 'auto') el.themeToggle.checked = systemDark.matches;
+});
+
 el.helpSelect.addEventListener('change', (e) => {
   progress.setHelp(e.target.value);
   refreshHighlight();
@@ -269,6 +296,9 @@ HELP_LEVELS.forEach((help) => {
   el.helpSelect.appendChild(option);
 });
 el.helpSelect.value = helpLevel().id;
+
+el.themeToggle.checked = isDark();
+applyTheme(themeId());
 
 renderLegend(el.legend);
 el.soundBtn.textContent = progress.state.sound ? '🔊' : '🔇';
