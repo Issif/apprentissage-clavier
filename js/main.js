@@ -46,6 +46,9 @@ const el = {
   levelSelect: $('#level-select'),
   helpSelect: $('#help-select'),
   themeToggle: $('#theme-toggle'),
+  intro: $('#intro'),
+  introClose: $('#intro-close'),
+  introBtn: $('#intro-btn'),
   soundBtn: $('#sound-btn'),
   resetBtn: $('#reset-btn'),
   warning: $('#layout-warning'),
@@ -60,6 +63,8 @@ let level = LEVELS[Math.min(progress.state.levelIndex, LEVELS.length - 1)];
 let doneInLevel = progress.state.levelDone || 0;
 let consecutiveErrors = 0;
 let locked = false;
+/* Tant que l'overlay est ouvert, aucune frappe ne doit compter comme une reponse. */
+let introOpen = false;
 
 const helpLevel = () => HELP_LEVELS.find((h) => h.id === progress.state.help) ?? HELP_LEVELS[1];
 
@@ -208,7 +213,35 @@ function onChar(char) {
 
 /* -------------------------------------------------------------- événements */
 
+/**
+ * @param {boolean} first true a la toute premiere visite, false pour une
+ *   relecture demandee via le bouton « ? ». Seul le libelle du bouton change :
+ *   « C'est parti ! » n'a plus de sens quand on revient lire les regles.
+ */
+function openIntro(first) {
+  introOpen = true;
+  el.introClose.textContent = first ? 'C’est parti !' : 'Fermer';
+  el.intro.hidden = false;
+  el.introClose.focus();
+}
+
+function closeIntro() {
+  if (!introOpen) return;
+  introOpen = false;
+  el.intro.hidden = true;
+  progress.markIntroSeen();
+  // On ne rend PAS le focus au bouton declencheur : un <button> focalise avale
+  // les frappes (voir FOCUSABLE_CONTROLS) et le jeu resterait sourd.
+  el.introClose.blur();
+}
+
 window.addEventListener('keydown', (event) => {
+  // L'overlay capte le clavier : Echap le ferme, le reste est ignore par le jeu.
+  if (introOpen) {
+    if (event.key === 'Escape') { event.preventDefault(); closeIntro(); }
+    return;
+  }
+
   // AltGr est signale differemment selon les systemes : AltGraph sous Linux et
   // macOS, Ctrl+Alt sous Windows. On laisse donc passer ces combinaisons.
   const altGraph = typeof event.getModifierState === 'function'
@@ -244,6 +277,12 @@ el.levelSelect.addEventListener('change', (e) => {
   goToLevel(Number(e.target.value), { announce: false });
   releaseFocus(e.target);
 });
+
+el.introClose.addEventListener('click', closeIntro);
+el.introBtn.addEventListener('click', (e) => { releaseFocus(e.currentTarget); openIntro(false); });
+
+// Un clic en dehors de la carte ferme aussi l'overlay.
+el.intro.addEventListener('click', (e) => { if (e.target === el.intro) closeIntro(); });
 
 el.themeToggle.addEventListener('change', (e) => {
   // Le premier basculement quitte « auto » pour un choix explicite, qui tiendra
@@ -299,6 +338,8 @@ el.helpSelect.value = helpLevel().id;
 
 el.themeToggle.checked = isDark();
 applyTheme(themeId());
+
+if (!progress.state.seenIntro) openIntro(true);
 
 renderLegend(el.legend);
 el.soundBtn.textContent = progress.state.sound ? '🔊' : '🔇';

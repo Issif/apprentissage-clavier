@@ -52,8 +52,44 @@
       </label>
       <button id="sound-btn" class="icon-btn" type="button" aria-label="Couper le son">🔊</button>
       <button id="reset-btn" class="icon-btn" type="button" aria-label="Tout recommencer">↺</button>
+      <button id="intro-btn" class="icon-btn" type="button" aria-label="Revoir la présentation">?</button>
     </div>
   </header>
+
+  <div id="intro" class="intro" role="dialog" aria-modal="true" aria-labelledby="intro-title" hidden>
+    <div class="intro-card">
+      <h2 id="intro-title" class="intro-title">
+        <span aria-hidden="true">⌨</span> Bienvenue !
+      </h2>
+
+      <p class="intro-lead">
+        Ce site apprend à taper au clavier avec les dix doigts, sans regarder les touches.
+      </p>
+
+      <h3 class="intro-sub">Comment ça marche</h3>
+      <ul class="intro-list">
+        <li>Tape ce qui s’affiche à l’écran. Le curseur n’avance que si la touche est la bonne.</li>
+        <li>Le clavier en couleurs montre quel doigt sert à quelle touche.</li>
+        <li>12 niveaux, de la rangée de repos jusqu’aux adresses e-mail.</li>
+        <li>Chaque séquence réussie rapporte des étoiles.</li>
+      </ul>
+
+      <h3 class="intro-sub">Les réglages, en haut de la page</h3>
+      <dl class="intro-settings">
+        <dt>Niveau</dt><dd>choisir où reprendre, à tout moment.</dd>
+        <dt>Thème</dt><dd>clair ou sombre, avec le soleil et la lune.</dd>
+        <dt><span aria-hidden="true">🔊</span> Son</dt><dd>couper ou remettre les petits bruits.</dd>
+        <dt><span aria-hidden="true">↺</span> Recommencer</dt><dd>effacer les étoiles et repartir du niveau 1.</dd>
+        <dt>Aide</dt><dd>après combien d’erreurs la bonne touche est montrée.</dd>
+      </dl>
+
+      <p class="intro-note">
+        Ce cours est prévu pour un clavier <strong>AZERTY français</strong>.
+      </p>
+
+      <button id="intro-close" class="intro-btn" type="button">C’est parti !</button>
+    </div>
+  </div>
 
   <p class="no-keyboard">
     <span class="no-keyboard-icon" aria-hidden="true">⌨</span>

@@ -15,6 +15,7 @@ const DEFAULTS = {
   sound: true,
   help: 'high',
   theme: 'auto',
+  seenIntro: false,
 };
 
 function read() {
@@ -51,6 +52,11 @@ export class Progress {
     return s;
   }
 
+  markIntroSeen() {
+    this.state.seenIntro = true;
+    this.save();
+  }
+
   setTheme(id) {
     this.state.theme = id;
     this.save();
@@ -73,7 +79,14 @@ export class Progress {
   }
 
   reset() {
-    this.state = { ...DEFAULTS, sound: this.state.sound, help: this.state.help, theme: this.state.theme };
+    // Les reglages et l'intro deja vue ne sont pas de la progression : on les garde.
+    this.state = {
+      ...DEFAULTS,
+      sound: this.state.sound,
+      help: this.state.help,
+      theme: this.state.theme,
+      seenIntro: this.state.seenIntro,
+    };
     this.save();
   }
 }
