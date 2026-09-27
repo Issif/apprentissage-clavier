@@ -115,6 +115,9 @@
   min-height: 1.6em;
 }
 
+/* Un mot reste d'un seul tenant : la ligne ne se coupe qu'entre deux mots. */
+.word { display: flex; gap: 4px; }
+
 .char {
   color: var(--ink-soft); padding: 0 2px; border-radius: 8px;
   transition: color 0.12s ease, background 0.12s ease;

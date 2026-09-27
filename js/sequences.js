@@ -79,6 +79,10 @@ const WORDS = [
   'voyage', 'vue', 'wagon', 'yaourt', 'zebre', 'zoo',
 ];
 
+/* Le palier juste apres les syllabes : des mots assez courts pour rester
+   lisibles d'un coup d'oeil, pris dans le vocabulaire deja defini. */
+const SHORT_WORDS = WORDS.filter((w) => w.length <= 5);
+
 const WORDS_ACCENTS = [
   'balançoire', 'bébé', 'blé', 'ça', 'café', 'caleçon', 'canapé', 'carré', 'céréale', 'chéri',
   'chèvre', 'cinéma', 'clé', 'comédie', 'début', 'décor', 'défilé', 'déjà', 'déjeuner',
@@ -111,6 +115,98 @@ const COMPOSED = [
    comme le veut la typographie francaise). */
 const SIGNS_SIMPLE = ['.', ','];
 const SIGNS_DOUBLE = [';', ':', '!', '?'];
+
+/* Groupes de lettres frequents en francais : le pont entre les lettres isolees
+   et les mots. Consonne + voyelle, puis digrammes et terminaisons courantes. */
+const SYLLABLES = [
+  'ba', 'be', 'bi', 'bo', 'bu', 'ca', 'co', 'cu', 'da', 'de', 'di', 'do', 'du',
+  'fa', 'fe', 'fi', 'fo', 'fu', 'ga', 'go', 'gu', 'ja', 'je', 'jo', 'la', 'le',
+  'li', 'lo', 'lu', 'ma', 'me', 'mi', 'mo', 'mu', 'na', 'ne', 'ni', 'no', 'nu',
+  'pa', 'pe', 'pi', 'po', 'pu', 'ra', 're', 'ri', 'ro', 'ru', 'sa', 'se', 'si',
+  'so', 'su', 'ta', 'te', 'ti', 'to', 'tu', 'va', 've', 'vi', 'vo', 'vu',
+  'ai', 'an', 'au', 'ch', 'ei', 'en', 'er', 'es', 'et', 'eu', 'in', 'on', 'ou',
+  'che', 'cho', 'chu', 'oui', 'ance', 'ente', 'onne', 'elle', 'ette',
+];
+
+/* Phrases du niveau « sans accent » : correctes, mais choisies pour ne contenir
+   aucune lettre accentuee, puisque les accents ne sont appris qu'au niveau
+   suivant. Ni majuscule ni ponctuation : elles arrivent plus tard elles aussi. */
+const PHRASES_SIMPLE = [
+  'le chat dort sur le tapis',
+  'papa lit un livre',
+  'mon chien joue dans la cour',
+  'la souris court dans le jardin',
+  'il fait froid ce matin',
+  'le lapin mange une carotte',
+  'nous jouons dans la neige',
+  'la lune brille dans la nuit',
+  'un oiseau chante sur la branche',
+  'le train part dans dix minutes',
+  'ma soeur dessine un bateau',
+  'le vent souffle fort',
+  'les poissons nagent dans le bassin',
+  'le facteur apporte une lettre',
+  'un papillon se pose sur la fleur',
+  'la tortue avance tout doucement',
+  'le chat boit son lait',
+  'le clown fait rire les enfants',
+  'nous plantons des fleurs',
+  'la pluie tombe sur la ville',
+  'le boulanger sort le pain du four',
+  'mon copain joue au ballon',
+  'la vache broute dans le champ',
+  'je bois un grand verre de lait',
+  'le poussin sort de sa coquille',
+  'nous chantons une chanson',
+  'un gros nuage cache le soleil',
+  'le petit chat monte sur la table',
+  'ma tante habite dans un village',
+  'les enfants courent dans la cour',
+  'le loup hurle dans la nuit',
+  'je dessine un grand soleil jaune',
+  'la balle roule sous le banc',
+  'mon sac est lourd ce matin',
+  'le canard nage sur le lac',
+  'une abeille butine la fleur',
+  'le singe grimpe dans un arbre',
+  'nous partons en vacances demain',
+  'la porte du jardin est ouverte',
+  'le tigre dort dans sa cage',
+  'ma cousine joue du piano',
+  'un bateau glisse sur la mer',
+];
+
+/* Memes regles, mais les accents entrent en scene. */
+const PHRASES_ACCENTS = [
+  'ma mère prépare le repas',
+  'les élèves lèvent la main',
+  'le bébé dort dans son lit',
+  'papa achète du café',
+  'nous allons à la piscine',
+  'le zèbre court dans la savane',
+  'la fée agite sa baguette',
+  'mon frère préfère le thé',
+  'la lumière du matin est très douce',
+  'il répète sa leçon',
+  'le garçon mange une pomme',
+  'nous préparons le repas',
+  'la rivière coule près du pré',
+  'le maçon répare le mur',
+  'ma tante habite à la campagne',
+  'le café est très chaud',
+  'les élèves écrivent leur poésie',
+  'il a réussi son exercice',
+  'la chèvre broute près de la barrière',
+  'mon père répare le vélo',
+  'la clé est près de la porte',
+  'le blé pousse dans le champ',
+  'ma mère écoute la télé',
+  'il fait très beau à midi',
+  'la récré est déjà terminée',
+  'une étoile brille dans le ciel',
+  'le bébé rit très fort',
+  'nous irons à la mer cet été',
+];
 
 const PHRASES = [
   'Le chat dort sur le tapis.',
@@ -255,35 +351,43 @@ export const LEVELS = [
     chars: 'azertyuiopqsdfghjklmwxcvbn', hint: 'Toutes les lettres sont là ! Descends vers w x c v b n.',
   },
   {
-    id: 5, name: 'De vrais mots', mode: 'words', source: WORDS,
-    chars: 'abcdefghijklmnopqrstuvwxyz ', hint: 'Des mots entiers. Le pouce frappe la barre d’espace.',
+    id: 5, name: 'Les syllabes', mode: 'groups', source: SYLLABLES,
+    chars: 'abcdefghijklmnopqrstuvwxyz ', hint: 'Des morceaux de mots. Enchaîne les lettres sans t’arrêter entre elles.',
   },
   {
-    id: 6, name: 'Les accents', mode: 'words', source: WORDS_ACCENTS,
+    id: 6, name: 'Les petits mots', mode: 'words', source: SHORT_WORDS,
+    chars: 'abcdefghijklmnopqrstuvwxyz ', hint: 'De vrais mots, courts. Le pouce frappe la barre d’espace.',
+  },
+  {
+    id: 7, name: 'Des phrases simples', mode: 'phrases', source: PHRASES_SIMPLE,
+    chars: 'abcdefghijklmnopqrstuvwxyz ', hint: 'Une vraie phrase ! Sans accent ni majuscule, on les verra bientôt.',
+  },
+  {
+    id: 8, name: 'Les accents', mode: 'phrases', source: PHRASES_ACCENTS,
     chars: 'abcdefghijklmnopqrstuvwxyzéèàç ', hint: 'Les touches accentuées sont sur la rangée des chiffres.',
   },
   {
-    id: 7, name: 'La ponctuation', mode: 'punct',
+    id: 9, name: 'La ponctuation', mode: 'punct',
     chars: null, hint: 'Le point et le point d’interrogation demandent la touche Maj.',
   },
   {
-    id: 8, name: 'Les chiffres', mode: 'digits',
+    id: 10, name: 'Les chiffres', mode: 'digits',
     chars: null, hint: 'Sur un clavier AZERTY, les chiffres se tapent avec Maj.',
   },
   {
-    id: 9, name: 'Des phrases', mode: 'phrases', source: PHRASES,
+    id: 11, name: 'Des phrases complètes', mode: 'phrases', source: PHRASES,
     chars: null, hint: 'Majuscules avec Maj (Shift) de la main opposée, et point final !',
   },
   {
-    id: 10, name: 'Phrases et nombres', mode: 'phrases', source: NUMBER_PHRASES,
+    id: 12, name: 'Phrases et nombres', mode: 'phrases', source: NUMBER_PHRASES,
     chars: null, hint: 'On mélange tout : lettres, chiffres et ponctuation.',
   },
   {
-    id: 11, name: 'Les touches AltGr', mode: 'altgr',
+    id: 13, name: 'Les touches AltGr', mode: 'altgr',
     chars: null, hint: 'Garde AltGr (à droite de la barre d’espace) enfoncé avec le pouce droit.',
   },
   {
-    id: 12, name: 'Comme un pro', mode: 'phrases', source: SYMBOL_PHRASES,
+    id: 14, name: 'Comme un pro', mode: 'phrases', source: SYMBOL_PHRASES,
     chars: null, hint: 'Adresses e-mail, prix et accolades : tout le clavier y passe !',
   },
 ];
@@ -361,8 +465,19 @@ function altgrSequence(groups = 4, size = 2) {
   return out.join(' ');
 }
 
+/** Suites de syllabes : "ma che ou ri" */
+function groupSequence(source, count = 4) {
+  const out = [];
+  while (out.length < count) {
+    const g = pick(source);
+    if (out[out.length - 1] !== g) out.push(g);
+  }
+  return out.join(' ');
+}
+
 export function nextSequence(level) {
   if (level.mode === 'letters') return letterSequence(level.chars);
+  if (level.mode === 'groups') return groupSequence(level.source);
   if (level.mode === 'altgr') return altgrSequence();
   if (level.mode === 'punct') return punctSequence();
   if (level.mode === 'digits') return digitSequence();

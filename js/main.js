@@ -86,9 +86,27 @@ function refreshHighlight() {
 
 /* --------------------------------------------------------------- affichage */
 
+/*
+ * Chaque caractere est un element, pour pouvoir le colorer individuellement.
+ * Ils sont regroupes par mot : sans ce regroupement, le retour a la ligne du
+ * conteneur flex tombe au milieu d'un mot ("coq" / "uille"), ce qui devient
+ * illisible des que les sequences sont de vraies phrases. Le tableau charEls
+ * garde un acces direct par position, l'imbrication rendant children[i] faux.
+ */
+let charEls = [];
+
 function renderSequence() {
   el.sequence.textContent = '';
+  charEls = [];
+  let word = null;
+
   [...engine.target].forEach((char, i) => {
+    if (!word) {
+      word = document.createElement('span');
+      word.className = 'word';
+      el.sequence.appendChild(word);
+    }
+
     const span = document.createElement('span');
     span.className = 'char';
     if (char === ' ') span.classList.add('is-space');
@@ -96,8 +114,13 @@ function renderSequence() {
     if (engine.statuses[i] === CORRECT) span.classList.add('is-ok');
     if (engine.statuses[i] === WRONG) span.classList.add('is-ko');
     if (i === engine.index) span.classList.add('is-current');
-    el.sequence.appendChild(span);
+    word.appendChild(span);
+    charEls.push(span);
+
+    // L'espace ferme le groupe : la coupure ne peut donc tomber qu'apres lui.
+    if (char === ' ') word = null;
   });
+
   el.seqBar.style.width = `${Math.round(engine.progress * 100)}%`;
 }
 
@@ -192,7 +215,7 @@ function onChar(char) {
     if (progress.state.sound) sounds.ko();
     keyboard.flash(char, false);
     renderSequence();
-    el.sequence.children[index]?.classList.add('shake');
+    charEls[index]?.classList.add('shake');
     refreshHighlight();
     mascot('oops');
     if (consecutiveErrors >= 8) el.warning.hidden = false;
@@ -242,11 +265,13 @@ window.addEventListener('keydown', (event) => {
     return;
   }
 
-  // AltGr est signale differemment selon les systemes : AltGraph sous Linux et
-  // macOS, Ctrl+Alt sous Windows. On laisse donc passer ces combinaisons.
-  const altGraph = typeof event.getModifierState === 'function'
-    && (event.getModifierState('AltGraph') || (event.ctrlKey && event.altKey));
-  if (!altGraph && (event.ctrlKey || event.altKey || event.metaKey)) return;
+  // On ne rend au navigateur que ses vrais raccourcis : Cmd sur macOS, et Ctrl
+  // employe seul. Alt/Option doit au contraire parvenir jusqu'au jeu, car c'est
+  // lui qui produit [ ] { } @ # € : sous Windows et Linux via AltGr (signale
+  // Ctrl+Alt ou AltGraph), sur macOS via Option seul, ou aucun AltGraph n'est
+  // rapporte. Filtrer sur altKey y jetait donc tous ces caracteres.
+  if (event.metaKey) return;
+  if (event.ctrlKey && !event.altKey) return;
   // Un controle garde le focus : on le laisse recevoir la frappe.
   if (FOCUSABLE_CONTROLS.includes(event.target.tagName)) return;
 
