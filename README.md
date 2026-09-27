@@ -8,7 +8,9 @@ erreur en rouge. Séquence terminée, une nouvelle apparaît.
 
 **→ [apprentissage-clavier.fr](https://apprentissage-clavier.fr)**
 
-![Apprendre le clavier en cours de partie](screenshots/screenshot_1.png)
+| Thème sombre | Thème clair |
+|---|---|
+| ![Niveau 6, thème sombre](screenshots/screenshot_1.png) | ![Niveau 12, thème clair](screenshots/screenshot_2.png) |
 
 ## Démarrer
 
