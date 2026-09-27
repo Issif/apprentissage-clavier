@@ -81,7 +81,22 @@ const WORDS = [
 
 /* Le palier juste apres les syllabes : des mots assez courts pour rester
    lisibles d'un coup d'oeil, pris dans le vocabulaire deja defini. */
-const SHORT_WORDS = WORDS.filter((w) => w.length <= 5);
+/*
+ * Mots grammaticaux et tres courts. WORDS ne contient que des noms concrets
+ * (ananas, arrosoir) : sans cette liste, les premiers paliers de decouverte
+ * n'auraient aucun mot a proposer. Aucun accent ici, ils arrivent plus tard.
+ */
+const TOOL_WORDS = [
+  'il', 'ils', 'le', 'les', 'elle', 'elles', 'sel', 'sels', 'lis', 'lie', 'selle',
+  'la', 'an', 'ans', 'sa', 'sale', 'salle', 'laine', 'aile', 'ail', 'anis',
+  'sain', 'sais', 'lien', 'liens', 'nain', 'ainsi', 'sali',
+  'ta', 'ton', 'tes', 'tas', 'nos', 'lot', 'lots', 'note', 'notes', 'toile',
+  'salon', 'talon', 'soit', 'sot', 'toi', 'tante', 'tonne', 'total', 'natal',
+  'lion', 'lions', 'saint', 'liste', 'sonne',
+  'un', 'une', 'tu', 'ou', 'sur', 'nous', 'tous', 'sous', 'leur', 'seul',
+  'rue', 'rues', 'rose', 'roses', 'tour', 'route', 'suite', 'saute', 'sourit',
+  'auto', 'nature', 'retour', 'soleil', 'sortie', 'noir', 'loin', 'lune',
+];
 
 const WORDS_ACCENTS = [
   'balançoire', 'bébé', 'blé', 'ça', 'café', 'caleçon', 'canapé', 'carré', 'céréale', 'chéri',
@@ -335,59 +350,70 @@ const SYMBOL_PHRASES = [
 
 export const LEVELS = [
   {
-    id: 1, name: 'La rangée de repos', mode: 'letters',
-    chars: 'qsdfjklm', hint: 'Pose tes doigts sur q s d f et j k l m. Ne les bouge pas !',
+    id: 1, name: 'Quatre lettres pour commencer', mode: 'discover',
+    fresh: 'esil', chars: 'esil',
+    hint: 'e et s à gauche, i et l à droite. Majeurs et annulaires, rien d’autre ne bouge.',
   },
   {
-    id: 2, name: 'Les index s’étirent', mode: 'letters',
-    chars: 'qsdfghjklm', hint: 'Les index vont chercher g et h, puis reviennent à leur place.',
+    id: 2, name: 'On ajoute a et n', mode: 'discover',
+    fresh: 'an', chars: 'esilan',
+    hint: 'a sous l’auriculaire gauche, n sous l’index droit.',
   },
   {
-    id: 3, name: 'La rangée du haut', mode: 'letters',
-    chars: 'azertyuiopqsdfghjklm', hint: 'Monte les doigts vers a z e r t y u i o p, puis redescends.',
+    id: 3, name: 'On ajoute t et o', mode: 'discover',
+    fresh: 'to', chars: 'esilanto',
+    hint: 't sous l’index gauche, o sous l’annulaire droit.',
   },
   {
-    id: 4, name: 'La rangée du bas', mode: 'letters',
-    chars: 'azertyuiopqsdfghjklmwxcvbn', hint: 'Toutes les lettres sont là ! Descends vers w x c v b n.',
+    id: 4, name: 'Les deux index : r et u', mode: 'discover',
+    fresh: 'ru', chars: 'esilantoru',
+    hint: 'Les deux index montent d’un cran pour aller chercher r et u.',
   },
   {
-    id: 5, name: 'Les syllabes', mode: 'groups', source: SYLLABLES,
-    chars: 'abcdefghijklmnopqrstuvwxyz ', hint: 'Des morceaux de mots. Enchaîne les lettres sans t’arrêter entre elles.',
+    id: 5, name: 'On ajoute d, m et p', mode: 'discover',
+    fresh: 'dmp', chars: 'esilantorudmp',
+    hint: 'd sous le majeur gauche, m et p sous l’auriculaire droit.',
   },
   {
-    id: 6, name: 'Les petits mots', mode: 'words', source: SHORT_WORDS,
-    chars: 'abcdefghijklmnopqrstuvwxyz ', hint: 'De vrais mots, courts. Le pouce frappe la barre d’espace.',
+    id: 6, name: 'La main gauche : c, v, b, f', mode: 'discover',
+    fresh: 'cvbf', chars: 'esilantorudmpcvbf',
+    hint: 'Quatre lettres d’un coup, toutes pour la main gauche.',
   },
   {
-    id: 7, name: 'Des phrases simples', mode: 'phrases', source: PHRASES_SIMPLE,
+    id: 7, name: 'Les lettres rares', mode: 'discover',
+    fresh: 'ghjqzxykw', chars: 'abcdefghijklmnopqrstuvwxyz',
+    hint: 'g h j q z x y k w : les plus rares. Tu as maintenant tout l’alphabet !',
+  },
+  {
+    id: 8, name: 'Des phrases simples', mode: 'phrases', source: PHRASES_SIMPLE,
     chars: 'abcdefghijklmnopqrstuvwxyz ', hint: 'Une vraie phrase ! Sans accent ni majuscule, on les verra bientôt.',
   },
   {
-    id: 8, name: 'Les accents', mode: 'phrases', source: PHRASES_ACCENTS,
+    id: 9, name: 'Les accents', mode: 'phrases', source: PHRASES_ACCENTS,
     chars: 'abcdefghijklmnopqrstuvwxyzéèàç ', hint: 'Les touches accentuées sont sur la rangée des chiffres.',
   },
   {
-    id: 9, name: 'La ponctuation', mode: 'punct',
+    id: 10, name: 'La ponctuation', mode: 'punct',
     chars: null, hint: 'Le point et le point d’interrogation demandent la touche Maj.',
   },
   {
-    id: 10, name: 'Les chiffres', mode: 'digits',
+    id: 11, name: 'Les chiffres', mode: 'digits',
     chars: null, hint: 'Sur un clavier AZERTY, les chiffres se tapent avec Maj.',
   },
   {
-    id: 11, name: 'Des phrases complètes', mode: 'phrases', source: PHRASES,
+    id: 12, name: 'Des phrases complètes', mode: 'phrases', source: PHRASES,
     chars: null, hint: 'Majuscules avec Maj (Shift) de la main opposée, et point final !',
   },
   {
-    id: 12, name: 'Phrases et nombres', mode: 'phrases', source: NUMBER_PHRASES,
+    id: 13, name: 'Phrases et nombres', mode: 'phrases', source: NUMBER_PHRASES,
     chars: null, hint: 'On mélange tout : lettres, chiffres et ponctuation.',
   },
   {
-    id: 13, name: 'Les touches AltGr', mode: 'altgr',
+    id: 14, name: 'Les touches AltGr', mode: 'altgr',
     chars: null, hint: 'Garde AltGr (à droite de la barre d’espace) enfoncé avec le pouce droit.',
   },
   {
-    id: 14, name: 'Comme un pro', mode: 'phrases', source: SYMBOL_PHRASES,
+    id: 15, name: 'Comme un pro', mode: 'phrases', source: SYMBOL_PHRASES,
     chars: null, hint: 'Adresses e-mail, prix et accolades : tout le clavier y passe !',
   },
 ];
@@ -475,7 +501,49 @@ function groupSequence(source, count = 4) {
   return out.join(' ');
 }
 
+/* Tout le vocabulaire utilisable par les paliers de decouverte, sans doublon. */
+const DISCOVER_WORDS = [...new Set([...TOOL_WORDS, ...WORDS])];
+
+/*
+ * Un palier de decouverte alterne deux choses : des syllabes construites avec
+ * les lettres deja vues, pour installer l'enchainement des doigts, et de vrais
+ * mots, pour que l'exercice ait du sens. Une sequence sur trois est un drill,
+ * et on retombe sur des suites de lettres seulement si le palier est trop
+ * pauvre pour former des syllabes.
+ */
+let discoverTick = 0;
+
+function discoverSequence(level) {
+  const usable = DISCOVER_WORDS.filter((w) => fits(w, level.chars));
+  const syllables = SYLLABLES.filter((y) => fits(y, level.chars));
+
+  // On insiste sur ce qui contient au moins une lettre nouvelle : sans cela, les
+  // derniers paliers retomberaient sur le vocabulaire deja acquis et les lettres
+  // qu'ils sont censes enseigner n'apparaitraient presque jamais.
+  const isFresh = (text) => [...(level.fresh ?? '')].some((c) => text.includes(c));
+  const fresh = syllables.filter(isFresh);
+  const freshWords = usable.filter(isFresh);
+  const words = freshWords.length >= 6 ? freshWords : usable;
+
+  discoverTick += 1;
+  const drill = discoverTick % 3 === 1 || words.length < 3;
+
+  if (drill) {
+    if (fresh.length >= 4) return groupSequence(fresh);
+    if (syllables.length >= 4) return groupSequence(syllables);
+    return letterSequence(level.fresh || level.chars);
+  }
+
+  const out = [];
+  while (out.length < 3) {
+    const w = pick(words);
+    if (!out.includes(w)) out.push(w);
+  }
+  return out.join(' ');
+}
+
 export function nextSequence(level) {
+  if (level.mode === 'discover') return discoverSequence(level);
   if (level.mode === 'letters') return letterSequence(level.chars);
   if (level.mode === 'groups') return groupSequence(level.source);
   if (level.mode === 'altgr') return altgrSequence();

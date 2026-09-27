@@ -1,6 +1,6 @@
 /** Rendu du clavier AZERTY a l'ecran et mise en évidence de la touche a frapper. */
 
-import { ROWS, CHAR_TO_KEY, FINGERS, shiftKeyFor } from './layout-azerty.js';
+import { ROWS, CHAR_TO_KEY, FINGERS, shiftKeyFor, IS_MAC, ALT_LABEL } from './layout-azerty.js';
 
 /** Legende des couleurs, construite depuis la table des doigts. */
 export function renderLegend(root) {
@@ -86,7 +86,7 @@ export class VirtualKeyboard {
         altEl.classList.add('is-modifier');
         this.active.push(altEl);
       }
-      hint += ' + AltGr (pouce droit)';
+      hint += IS_MAC ? ` + ${ALT_LABEL} Option` : ` + ${ALT_LABEL} (pouce droit)`;
     }
 
     if (entry.shift) {

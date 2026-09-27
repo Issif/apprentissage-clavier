@@ -66,6 +66,64 @@ export const ROWS = [
   ],
 ];
 
+/**
+ * Le clavier Apple français diffère du PC sur sa troisième couche : il n'a pas
+ * d'AltGr mais une touche Option (⌥), présente des deux côtés, et plusieurs
+ * caractères y demandent Option + Maj là où le PC se contente d'AltGr.
+ *
+ * ATTENTION : ces correspondances demandent confirmation sur une vraie machine.
+ * Une seule est certaine pour tout le monde, c'est l'absence d'AltGr. Le reste
+ * est donné ici pour les caractères que le niveau AltGr fait taper.
+ */
+const MAC_ALT_LAYER = {
+  '{': { keyId: '(', shift: false },
+  '}': { keyId: ')', shift: false },
+  '[': { keyId: '(', shift: true },
+  ']': { keyId: ')', shift: true },
+  '|': { keyId: 'l', shift: true },
+  '\\': { keyId: ':', shift: true },
+  '€': { keyId: '$', shift: false },
+};
+
+/** Touches dont la couche de base elle-même change sur Mac. */
+const MAC_BASE = {
+  '²': { low: '@', up: '#' },
+};
+
+/** Vrai sur macOS. Absent de Node, ou la detection retombe simplement sur PC. */
+export const IS_MAC = /Mac|iPhone|iPad/i.test(
+  globalThis.navigator?.userAgentData?.platform
+  || globalThis.navigator?.platform
+  || '',
+);
+
+/** Nom du modificateur de troisieme couche, tel qu'il est grave sur la touche. */
+export const ALT_LABEL = IS_MAC ? '⌥' : 'AltGr';
+
+/**
+ * Adapte ROWS a la plateforme : sur Mac la troisieme couche du PC est fausse,
+ * on la retire avant d'y poser celle d'Apple, et les deux touches Alt deviennent
+ * des Option interchangeables.
+ */
+function applyMacLayout() {
+  for (const key of ROWS.flat()) {
+    if (key.special) {
+      if (key.id === 'AltGraph' || key.id === 'AltLeft') key.label = '⌥ Option';
+      continue;
+    }
+    delete key.alt;
+    const base = MAC_BASE[key.id];
+    if (base) Object.assign(key, base);
+  }
+  for (const [char, { keyId, shift }] of Object.entries(MAC_ALT_LAYER)) {
+    const key = ROWS.flat().find((k2) => k2.id === keyId);
+    // Seul le caractere sans Maj peut etre grave sur la touche.
+    if (key && !shift) key.alt = char;
+  }
+}
+
+if (IS_MAC) applyMacLayout();
+
 /** La barre d'espace, retrouvée par son identifiant plutôt que par sa position. */
 const SPACE_KEY = ROWS.flat().find((key) => key.id === 'Space');
 
@@ -75,12 +133,21 @@ export const CHAR_TO_KEY = (() => {
   for (const row of ROWS) {
     for (const key of row) {
       if (key.special) continue;
-      if (!map.has(key.low)) map.set(key.low, { key, shift: false });
-      if (key.up && !map.has(key.up)) map.set(key.up, { key, shift: true });
-      if (key.alt && !map.has(key.alt)) map.set(key.alt, { key, altgr: true });
+      if (!map.has(key.low)) map.set(key.low, { key, shift: false, altgr: false });
+      if (key.up && !map.has(key.up)) map.set(key.up, { key, shift: true, altgr: false });
+      if (key.alt && !map.has(key.alt)) map.set(key.alt, { key, shift: false, altgr: true });
     }
   }
-  map.set(' ', { key: SPACE_KEY, shift: false });
+  map.set(' ', { key: SPACE_KEY, shift: false, altgr: false });
+
+  // Sur Mac, plusieurs caracteres demandent Option ET Maj : la table doit donc
+  // pouvoir porter les deux modificateurs a la fois.
+  if (IS_MAC) {
+    for (const [char, { keyId, shift }] of Object.entries(MAC_ALT_LAYER)) {
+      const key = ROWS.flat().find((k2) => k2.id === keyId);
+      if (key) map.set(char, { key, shift, altgr: true });
+    }
+  }
   return map;
 })();
 
