@@ -10,6 +10,9 @@ const SEQUENCES_PER_LEVEL = 5;
 
 const FOCUSABLE_CONTROLS = ['SELECT', 'BUTTON', 'INPUT', 'TEXTAREA'];
 
+/* Bonnes frappes d'affilee avant que la mascotte ne passe au grand sourire. */
+const HAPPY_AFTER = 3;
+
 /**
  * Niveaux d'aide. `threshold` est le nombre d'erreurs sur le caractère courant
  * a partir duquel la touche (et son modificateur) est montrée sur le clavier.
@@ -62,6 +65,8 @@ const keyboard = new VirtualKeyboard(el.keyboard, el.fingerHint);
 let level = LEVELS[Math.min(progress.state.levelIndex, LEVELS.length - 1)];
 let doneInLevel = progress.state.levelDone || 0;
 let consecutiveErrors = 0;
+/* Bonnes frappes depuis la derniere erreur : pilote l'humeur de la mascotte. */
+let correctRun = 0;
 let locked = false;
 /* Tant que l'overlay est ouvert, aucune frappe ne doit compter comme une reponse. */
 let introOpen = false;
@@ -203,6 +208,7 @@ function onSequenceComplete() {
       if (doneInLevel >= SEQUENCES_PER_LEVEL) doneInLevel = 0;
       newSequence();
     }
+    correctRun = 0;
     mascot('idle');
   }, 1200);
 }
@@ -217,6 +223,7 @@ function onChar(char) {
     renderSequence();
     charEls[index]?.classList.add('shake');
     refreshHighlight();
+    correctRun = 0;
     mascot('oops');
     if (consecutiveErrors >= 8) el.warning.hidden = false;
     renderHud();
@@ -229,6 +236,12 @@ function onChar(char) {
   keyboard.flash(char, true);
   renderSequence();
   refreshHighlight();
+
+  // La mascotte se deride progressivement : neutre des que la frappe redevient
+  // juste, grand sourire seulement une fois la serie retablie.
+  correctRun += 1;
+  mascot(correctRun >= HAPPY_AFTER ? 'happy' : 'idle');
+
   renderHud();
 
   if (result === COMPLETE) onSequenceComplete();
